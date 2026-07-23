@@ -1,16 +1,22 @@
-# React + Vite
+# OrderGo
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+OrderGo is a web application designed to streamline order management for a takeaway food business.
 
-Currently, two official plugins are available:
+The application allows users to register customer details, pickup date and time, requested products, order status, and payment status. It also provides a daily summary showing the total quantities needed to prepare all orders.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## MVP Goals
 
-## React Compiler
+* Quickly register new orders.
+* View orders for a selected date.
+* Edit and delete orders.
+* Mark orders as delivered and paid.
+* Calculate the total number of chickens and other products that need to be prepared.
+* Use the application from a mobile phone, tablet, or computer.
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## Technologies
 
-## Expanding the Oxlint configuration
-
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and Oxlint's TypeScript related rules in your project.
+* React
+* JavaScript
+* Vite
+* Supabase
+* Cloudflare Pages
