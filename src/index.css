@@ -4,7 +4,7 @@
   --bg: #16171d;
   --sans: system-ui, 'Segoe UI', Roboto, sans-serif;
 
-  font: 18px/145% var(--sans);
+  font: 1rem/145% var(--sans);
   letter-spacing: 0.18px;
   color: var(--text);
   background: var(--bg);
@@ -36,9 +36,6 @@ h1 {
   font-family: var(--sans);
   font-weight: 500;
   color: var(--text-h);
-}
-
-h1 {
   font-size: 56px;
   letter-spacing: -1.68px;
   margin: 32px 0;
