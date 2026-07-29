@@ -6,8 +6,12 @@ let nextOrderId = 1
 function App() {
 
   const [orders, setOrders] = useState([])
-  const [errorName, setErrorName] = useState(false)
-  const [errorPhone, setErrorPhone] = useState(false)
+  const [errors, setErrors] = useState({
+    name: false,
+    phone: false,
+    pickupDate: false,
+    pickupTime: false
+  })
 
   const handleSubmit = (event) => {
     event.preventDefault()
@@ -16,25 +20,39 @@ function App() {
 
     const trimmedName = formData.get('name').trim()
     const trimmedPhone = formData.get('phone').trim()
+    const trimmedNotes = formData.get('notes').trim()
 
-    //Campo vacio aparece el <span> con el error
-    setErrorName(!trimmedName)
-    setErrorPhone(!trimmedPhone)
+    const nextErrors = {
+      name: !trimmedName,
+      phone: !trimmedPhone,
+      pickupDate: !formData.get('pickupDate'),
+      pickupTime: !formData.get('pickupTime')
+    }
 
-    //Campo vacio bloquea el submit
-    if (!trimmedName || !trimmedPhone) {
+    setErrors(nextErrors)
+
+    if (
+      nextErrors.name ||
+      nextErrors.phone ||
+      nextErrors.pickupDate ||
+      nextErrors.pickupTime
+    ) {
       return
     }
 
     const newOrder = {
       id: nextOrderId,
       customerName: trimmedName,
-      customerPhone: trimmedPhone
+      customerPhone: trimmedPhone,
+      pickupDate: formData.get('pickupDate'),
+      pickupTime: formData.get('pickupTime'),
+      notes: trimmedNotes
     }
 
     nextOrderId++;
 
     setOrders((currentOrders) => [...currentOrders, newOrder])
+
     event.target.reset()
   }
 
@@ -54,8 +72,7 @@ function App() {
             name='name'
             required
           />
-
-          {errorName && <span>El nombre es obligatorio</span>}
+          {errors.name && <span>El nombre es obligatorio</span>}
         </div>
         <div className='form-field'>
           <label htmlFor='phone'>Teléfono: </label>
@@ -65,22 +82,42 @@ function App() {
             name='phone'
             required
           />
-
-          {errorPhone && <span>El teléfono es obligatorio</span>}
+          {errors.phone && <span>El teléfono es obligatorio</span>}
         </div>
-
+        <div className='form-field'>
+          <label htmlFor='pickupDate'>Fecha: </label>
+          <input
+            type="date"
+            id='pickupDate'
+            name='pickupDate'
+            required
+          />
+          {errors.pickupDate && <span>La fecha es obligatoria</span>}
+        </div>
+        <div className='form-field'>
+          <label htmlFor='pickupTime'>Hora: </label>
+          <input
+            type="time"
+            id='pickupTime'
+            name='pickupTime'
+            required
+          />
+          {errors.pickupTime && <span>La hora es obligatoria</span>}
+        </div>
+        <div className='form-field'>
+          <label htmlFor='notes'>Notas: </label>
+          <textarea id='notes' name='notes' rows="5"></textarea>
+        </div>
         <button type='submit'>Enviar</button>
       </form>
-
       <section>
         <h2>Pedidos: </h2>
         {orders.map((order) => (
           <p key={order.id}>
-            Pedido {order.id}: {order.customerName} - {order.customerPhone}
+            Pedido {order.id}: {order.customerName} - {order.customerPhone} - {order.pickupDate} - {order.pickupTime} - {order.notes}
           </p>
         ))}
       </section>
-
     </main>
   )
 }
