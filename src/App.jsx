@@ -1,31 +1,41 @@
 import { useState } from 'react';
 import './App.css'
 
+let nextOrderId = 1
+
 function App() {
 
-  const [customerName, setCustomerName] = useState('')
-  const [customerPhone, setCustomerPhone] = useState('')
-  const [submittedCustomerName, setSubmittedCustomerName] = useState('')
-  const [submittedCustomerPhone, setSubmittedCustomerPhone] = useState('')
+  const [orders, setOrders] = useState([])
   const [errorName, setErrorName] = useState(false)
   const [errorPhone, setErrorPhone] = useState(false)
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    const trimmedName = customerName.trim()
-    const trimmedPhone = customerPhone.trim()
+  const handleSubmit = (event) => {
+    event.preventDefault()
 
+    const formData = new FormData(event.target)
+
+    const trimmedName = formData.get('name').trim()
+    const trimmedPhone = formData.get('phone').trim()
+
+    //Campo vacio aparece el <span> con el error
     setErrorName(!trimmedName)
     setErrorPhone(!trimmedPhone)
 
+    //Campo vacio bloquea el submit
     if (!trimmedName || !trimmedPhone) {
       return
     }
 
-    setSubmittedCustomerName(trimmedName)
-    setSubmittedCustomerPhone(trimmedPhone)
-    setCustomerName('')
-    setCustomerPhone('')
+    const newOrder = {
+      id: nextOrderId,
+      customerName: trimmedName,
+      customerPhone: trimmedPhone
+    }
+
+    nextOrderId++;
+
+    setOrders((currentOrders) => [...currentOrders, newOrder])
+    event.target.reset()
   }
 
   return (
@@ -35,7 +45,7 @@ function App() {
         <p>Gestión rápida de pedidos</p>
       </header>
       <h2>Nuevo pedido:</h2>
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit} noValidate>
         <div className="form-field">
           <label htmlFor='name'>Nombre completo: </label>
           <input
@@ -43,13 +53,9 @@ function App() {
             id='name'
             name='name'
             required
-            value={customerName}
-            onChange={(event) => setCustomerName(event.target.value)}
           />
 
-          {errorName && (
-            <span>El nombre no es válido</span>
-          )}
+          {errorName && <span>El nombre es obligatorio</span>}
         </div>
         <div className='form-field'>
           <label htmlFor='phone'>Teléfono: </label>
@@ -58,20 +64,22 @@ function App() {
             id='phone'
             name='phone'
             required
-            value={customerPhone}
-            onChange={(event) => setCustomerPhone(event.target.value)}
           />
 
-          {errorPhone && (
-            <span>El teléfono no es válido</span>
-          )}
+          {errorPhone && <span>El teléfono es obligatorio</span>}
         </div>
+
         <button type='submit'>Enviar</button>
       </form>
 
-      {submittedCustomerName && (
-        <p>Último cliente registrado: {submittedCustomerName} - {submittedCustomerPhone}</p>
-      )}
+      <section>
+        <h2>Pedidos: </h2>
+        {orders.map((order) => (
+          <p key={order.id}>
+            Pedido {order.id}: {order.customerName} - {order.customerPhone}
+          </p>
+        ))}
+      </section>
 
     </main>
   )
