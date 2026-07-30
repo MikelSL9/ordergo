@@ -3,6 +3,59 @@ import './App.css'
 
 let nextOrderId = 1
 
+const PRODUCT_CATALOG = [
+  {
+    id: 'pollo-entero',
+    name: 'Pollo entero',
+    category: 'carnes'
+  },
+  {
+    id: 'medio-pollo',
+    name: 'Medio pollo',
+    category: 'carnes'
+  },
+  {
+    id: 'conejo',
+    name: 'Conejo',
+    category: 'carnes'
+  },
+  {
+    id: 'costillar',
+    name: 'Costillar',
+    category: 'carnes'
+  },
+  {
+    id: 'patatas-grande',
+    name: 'Ración patatas grande',
+    category: 'patatas'
+  },
+  {
+    id: 'patatas-pequena',
+    name: 'Ración patatas pequeña',
+    category: 'patatas'
+  },
+  {
+    id: 'croquetas-jamon',
+    name: 'Croquetas de jamón',
+    category: 'croquetas'
+  },
+  {
+    id: 'croquetas-bacalao',
+    name: 'Croquetas de bacalao',
+    category: 'croquetas'
+  },
+  {
+    id: 'croquetas-cocido',
+    name: 'Croquetas de cocido',
+    category: 'croquetas'
+  },
+  {
+    id: 'croquetas-rabo',
+    name: 'Croquetas de rabo de toro',
+    category: 'croquetas'
+  },
+]
+
 function App() {
 
   const [orders, setOrders] = useState([])
@@ -10,7 +63,9 @@ function App() {
     name: false,
     phone: false,
     pickupDate: false,
-    pickupTime: false
+    pickupTime: false,
+    products: false,
+    quantities: false
   })
 
   const handleSubmit = (event) => {
@@ -22,11 +77,27 @@ function App() {
     const trimmedPhone = formData.get('phone').trim()
     const trimmedNotes = formData.get('notes').trim()
 
+    const productsWithQuantity = PRODUCT_CATALOG.map((product) => {
+      const inputName = `quantity-${product.id}`
+      const quantity = Number(formData.get(inputName))
+
+      return {
+        productId: product.id,
+        quantity: quantity
+      }
+    })
+
+    const hasInvalidQuantity = productsWithQuantity.some((product) => !Number.isInteger(product.quantity) || product.quantity < 0)
+
+    const selectedProducts = productsWithQuantity.filter((product) => product.quantity > 0)
+
     const nextErrors = {
       name: !trimmedName,
       phone: !trimmedPhone,
       pickupDate: !formData.get('pickupDate'),
-      pickupTime: !formData.get('pickupTime')
+      pickupTime: !formData.get('pickupTime'),
+      products: selectedProducts.length === 0 && !hasInvalidQuantity,
+      quantities: hasInvalidQuantity
     }
 
     setErrors(nextErrors)
@@ -35,7 +106,9 @@ function App() {
       nextErrors.name ||
       nextErrors.phone ||
       nextErrors.pickupDate ||
-      nextErrors.pickupTime
+      nextErrors.pickupTime ||
+      nextErrors.products ||
+      nextErrors.quantities
     ) {
       return
     }
@@ -46,13 +119,12 @@ function App() {
       customerPhone: trimmedPhone,
       pickupDate: formData.get('pickupDate'),
       pickupTime: formData.get('pickupTime'),
+      products: selectedProducts,
       notes: trimmedNotes
     }
 
     nextOrderId++;
-
     setOrders((currentOrders) => [...currentOrders, newOrder])
-
     event.target.reset()
   }
 
@@ -108,14 +180,63 @@ function App() {
           <label htmlFor='notes'>Notas: </label>
           <textarea id='notes' name='notes' rows="5"></textarea>
         </div>
+
+        <fieldset>
+          <legend>Productos</legend>
+          <div className='products-grid'>
+            {PRODUCT_CATALOG.map((product) => (
+              <div className="product-field" key={product.id}>
+                <label htmlFor={`quantity-${product.id}`}>
+                  {product.name}
+                </label>
+
+                <input
+                  type="number"
+                  id={`quantity-${product.id}`}
+                  name={`quantity-${product.id}`}
+                  min="0"
+                  step="1"
+                  defaultValue="0"
+                />
+              </div>
+            ))}
+          </div>
+          {errors.products && (
+            <span>Selecciona al menos un producto</span>
+          )}
+          {errors.quantities && (
+            <span>Cantidad inválida</span>
+          )}
+        </fieldset>
         <button type='submit'>Enviar</button>
       </form>
-      <section>
-        <h2>Pedidos: </h2>
+      <section className='products-list'>
+        <p>Pedidos: </p>
         {orders.map((order) => (
-          <p key={order.id}>
-            Pedido {order.id}: {order.customerName} - {order.customerPhone} - {order.pickupDate} - {order.pickupTime} - {order.notes}
-          </p>
+          <article key={order.id}>
+            <h2>
+              Pedido {order.id}
+            </h2>
+            <p>
+              {order.customerName}
+            </p>
+            <p>
+              {order.customerPhone}
+            </p>
+            <ul>
+              {order.products.map((product) => {
+                const catalogProduct = PRODUCT_CATALOG.find(
+                  (catalogProduct) => catalogProduct.id === product.productId
+                )
+                return (
+                  <li key={product.productId}>
+                    {catalogProduct.name}: {product.quantity}
+                  </li>
+                )
+              })}
+            </ul>
+            {order.pickupDate} - {order.pickupTime} - {order.notes}
+          </article>
         ))}
       </section>
     </main>
