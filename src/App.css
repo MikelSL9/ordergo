@@ -38,5 +38,17 @@ span {
   width: 100%;
 }
 
+.orders-list {
+  display: grid;
+  gap: 1rem;
+  margin-top: 2rem;
+}
+
+.order-card {
+  padding: 1rem;
+  border: 1px solid #d0d0d0;
+  border-radius: 0.75rem;
+}
+
 
 
