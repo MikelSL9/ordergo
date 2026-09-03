@@ -12,13 +12,26 @@ function App() {
   const handleCreateOrder = (orderData) => {
     const newOrder = {
       id: nextOrderId,
-      ...orderData
+      ...orderData,
+      fulfillmentStatus: 'pending'
     }
 
     setOrders((currentOrders) => [...currentOrders, newOrder])
     nextOrderId++;
   }
 
+  const handleToggleFulfillmentStatus = (orderId) => {
+    setOrders((currentOrders) => currentOrders.map((order) => {
+      if (order.id !== orderId) {
+        return order
+      }
+
+      return {
+        ...order,
+        fulfillmentStatus: order.fulfillmentStatus === 'pending' ? 'delivered' : 'pending'
+      }
+    }))
+  }
 
   return (
     <main className='app'>
@@ -30,7 +43,10 @@ function App() {
         onCreateOrder={handleCreateOrder}
       />
 
-      <OrderList orders={orders} />
+      <OrderList
+        orders={orders}
+        onToggleFulfillmentStatus={handleToggleFulfillmentStatus}
+      />
     </main>
   )
 }

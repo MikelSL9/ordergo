@@ -1,6 +1,6 @@
 import OrderItem from './OrderItem';
 
-function OrderList({ orders }) {
+function OrderList({ orders, onToggleFulfillmentStatus }) {
 
   return (
     <section className='orders-list'>
@@ -13,6 +13,7 @@ function OrderList({ orders }) {
             <OrderItem
               key={order.id}
               order={order}
+              onToggleFulfillmentStatus={onToggleFulfillmentStatus}
             />
           ))}
         </>
