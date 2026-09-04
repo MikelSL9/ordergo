@@ -1,11 +1,11 @@
 import { PRODUCT_CATALOG } from '../data/productCatalog';
 
-function OrderItem({ order, onToggleFulfillmentStatus }) {
+function OrderItem({ order, onToggleStatus }) {
 
-  const fulfillmentStatusLabel = order.fulfillmentStatus === 'pending' ? 'Pendiente' : 'Entregado'
+  const statusLabel = order.status === 'pending' ? 'Pendiente' : 'Listo'
 
-  const handleFulfillmentStatusClick = () => {
-    onToggleFulfillmentStatus(order.id)
+  const handleStatusClick = () => {
+    onToggleStatus(order.id)
   }
 
   return (
@@ -39,14 +39,15 @@ function OrderItem({ order, onToggleFulfillmentStatus }) {
         })}
       </ul>
       <p>{order.notes}</p>
-      <button
-        type='button'
-        className={`order-fulfillment-status-button order-fulfillment-status-button--${order.fulfillmentStatus}`}
-        aria-pressed={order.fulfillmentStatus === 'delivered'}
-        onClick={handleFulfillmentStatusClick}
-      >
-        {fulfillmentStatusLabel}
-      </button>
+      <div className="order-card-status">
+        <button
+          type='button'
+          className={`order-status-button order-status-button--${order.status}`}
+          onClick={handleStatusClick}
+        >
+          {statusLabel}
+        </button>
+      </div>
     </article>
   )
 }

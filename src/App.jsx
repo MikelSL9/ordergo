@@ -13,14 +13,14 @@ function App() {
     const newOrder = {
       id: nextOrderId,
       ...orderData,
-      fulfillmentStatus: 'pending'
+      status: 'pending',
     }
 
     setOrders((currentOrders) => [...currentOrders, newOrder])
     nextOrderId++;
   }
 
-  const handleToggleFulfillmentStatus = (orderId) => {
+  const handleToggleStatus = (orderId) => {
     setOrders((currentOrders) => currentOrders.map((order) => {
       if (order.id !== orderId) {
         return order
@@ -28,7 +28,7 @@ function App() {
 
       return {
         ...order,
-        fulfillmentStatus: order.fulfillmentStatus === 'pending' ? 'delivered' : 'pending'
+        status: order.status === 'pending' ? 'delivered' : 'pending'
       }
     }))
   }
@@ -45,7 +45,7 @@ function App() {
 
       <OrderList
         orders={orders}
-        onToggleFulfillmentStatus={handleToggleFulfillmentStatus}
+        onToggleStatus={handleToggleStatus}
       />
     </main>
   )

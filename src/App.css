@@ -50,7 +50,7 @@ span {
   border-radius: 0.75rem;
 }
 
-.order-fulfillment-status-button {
+.order-status-button {
   padding: 0.625rem 1rem;
   border: 1px solid transparent;
   border-radius: 0.5rem;
@@ -60,23 +60,25 @@ span {
   cursor: pointer;
 }
 
-.order-fulfillment-status-button--pending {
+.order-card-status {
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+}
+
+.order-status-button--pending {
   background-color: #1e40af;
 }
 
-.order-fulfillment-status-button--pending:hover {
+.order-status-button--pending:hover {
   background-color: #1d4ed8;
 }
 
-.order-fulfillment-status-button--delivered {
+.order-status-button--delivered{
   background-color: #166534;
 }
 
-.order-fulfillment-status-button--delivered:hover {
+.order-status-button--delivered:hover {
   background-color: #15803d;
 }
 
-.order-fulfillment-status-button:focus-visible {
-  outline: 3px solid #fbbf24;
-  outline-offset: 3px;
-}
